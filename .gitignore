@@ -1,0 +1,46 @@
+# 构建产物
+build/
+out/
+cmake-build-*/
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CMakeUserPresets.json
+
+# vcpkg
+vcpkg_installed/
+vcpkg/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.sln.docstates
+
+# 编译器
+*.cache
+
+# 系统
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# RenderDoc 抓帧(大文件,不进 git)
+*.rdc
+*.cap
+
+# 大型资产(按需启用:取消注释以排除大贴图)
+# *.png
+# *.jpg
+# *.hdr
+# *.ktx
