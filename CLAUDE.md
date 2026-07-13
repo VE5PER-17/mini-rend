@@ -34,6 +34,20 @@
 | 窗口库 | GLFW | 轻量跨平台 |
 | 构建系统 | CMake + vcpkg | C++ 事实标准 |
 | 调试 | Vulkan 验证层 + RenderDoc | 见下"调试工具" |
+| 编辑器 | VS Code + CMake Tools 插件 | 轻、适合逐行读代码的工作流 |
+| 编译器 | MSVC(VS 2022 自带) | Windows 上 Vulkan 生态支持最好 |
+
+**用户开发机:** NVIDIA GeForce/RTX(Vulkan 支持最好,RenderDoc 兼容)。
+**跨设备:** 另一台也是 Windows,工具链完全一致,无平台障碍。
+
+**已装工具(本机,2026-07-13 检测):**
+- Visual Studio 2022 Professional(`C:\Program Files\Microsoft Visual Studio\18\Professional`)—— 含 MSVC
+- VS Build Tools(`C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools`)
+- CMake 4.3.4
+- Git 2.54.0
+- 未装:vcpkg、GLFW、glm(里程碑 1 装);Vulkan SDK(里程碑 3 装)
+
+**理论深度:中等。** 用户会自己补充原理,Claude 在相关步骤提示"这里需要补 XX 原理"即可,不展开推导。
 
 **用户背景:** 有 Java 基础,C++ 几乎新学,图形新手。重点防 Java→C++ 的心智模型坑:指针 / 手动内存、栈 vs 堆 / RAII、未定义行为、值语义。
 

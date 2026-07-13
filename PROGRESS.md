@@ -38,11 +38,34 @@
 
 ## 当前状态
 
-**当前里程碑:** 尚未开始(项目骨架刚搭好)
+**当前里程碑:** 里程碑 1(C++ 热身 + OpenGL 第一个三角形)
 
-**当前步骤:** 无
+**当前步骤:** 搭工具链 —— 手动逐个装,每装一个验证一个
 
-**下一步:** 开始里程碑 1 第一步——搭工具链(CMake + vcpkg + 编译器 + GLFW + glm)
+## 工具链现状(2026-07-13 检测)
+
+已装(不用再装):
+- VS 2022 Professional(含 MSVC 编译器)
+- VS Build Tools
+- CMake 4.3.4
+- Git 2.54.0
+
+本步骤已装(2026-07-13):
+- ✅ vcpkg(`C:\dev\vcpkg`,版本 2026-05-27)
+- ✅ GLFW 3.4(via vcpkg,glfw3:x64-windows)
+- ✅ glm 1.0.3(via vcpkg,glm:x64-windows)
+- ⏳ VS Code 插件:C/C++、CMake Tools、CMake(用户手动装中)
+
+里程碑 3 才装:Vulkan SDK、RenderDoc
+
+## 下一步(细化)
+
+**当前:** 等用户装完 VS Code 插件 → 做整条工具链的冒烟测试
+
+**冒烟测试:** 写一个最小 CMake 工程,用 MSVC 编译,链接 GLFW + glm,跑出一个窗口。
+验证:编辑器 → CMake → MSVC → vcpkg 库 整条链路都通,地基扎实再写渲染代码。
+
+**通过后:** 进入里程碑 1 第二步 —— 窗口程序(练 RAII / 智能指针),再学管线概念画三角形。
 
 ## 卡点 / 待决问题
 
