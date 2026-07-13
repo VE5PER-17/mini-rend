@@ -101,6 +101,13 @@
   - `NOTES.md`——学习笔记,每个概念一段。
 - 新设备流程:`git clone` → 装相同工具链 → 启动 Claude → Claude 读 CLAUDE.md + PROGRESS.md → 接着干
 
+### README 更新约定
+
+每次同步进度到 GitHub 时,**顺手更新 README.md 里的"当前进度"小节**。
+- README 是仓库首页门面,给用户扫一眼看概览用,保持简短(几行即可)。
+- 详细进度、子步骤、卡点都放 `PROGRESS.md`,不要堆进 README。
+- 更新内容:当前里程碑 + 一句话进度 + 下一步。
+
 ## 里程碑路线图
 
 详见 `PROGRESS.md`。概览:
