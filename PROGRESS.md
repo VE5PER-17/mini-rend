@@ -42,28 +42,50 @@
 
 **当前步骤:** 搭工具链 —— 手动逐个装,每装一个验证一个
 
-## 工具链现状(2026-07-13 检测)
+**进度:** 工具链在开发机 A 已装完;开发机 B(另一台 Windows)尚未装。下一步是冒烟测试。
 
-已装(不用再装):
+## 工具链现状
+
+### 开发机 A(本机,2026-07-13)— 工具链完整 ✅
+
+已装:
 - VS 2022 Professional(含 MSVC 编译器)
 - VS Build Tools
 - CMake 4.3.4
 - Git 2.54.0
-
-本步骤已装(2026-07-13):
-- ✅ vcpkg(`C:\dev\vcpkg`,版本 2026-05-27)
-- ✅ GLFW 3.4(via vcpkg,glfw3:x64-windows)
-- ✅ glm 1.0.3(via vcpkg,glm:x64-windows)
-- ⏳ VS Code 插件:C/C++、CMake Tools、CMake(用户手动装中)
+- vcpkg(`C:\dev\vcpkg`,版本 2026-05-27)
+- GLFW 3.4(via vcpkg,glfw3:x64-windows)
+- glm 1.0.3(via vcpkg,glm:x64-windows)
+- VS Code 插件:C/C++、CMake Tools、CMake ✅
 
 里程碑 3 才装:Vulkan SDK、RenderDoc
 
+### 开发机 B(另一台 Windows)— 尚未开始
+
+接手前必须先装好整套工具链(下一个 Claude 带用户做):
+1. Visual Studio 2022(Community 免费版即可,装时勾选"使用 C++ 的桌面开发"工作负载)—— 提供 MSVC
+2. CMake(cmake.org 下载,或 VS 安装器里勾选)
+3. Git
+4. vcpkg:`git clone https://github.com/microsoft/vcpkg.git C:\dev\vcpkg` → `cd C:\dev\vcpkg && .\bootstrap-vcpkg.bat`
+5. 用 vcpkg 装库:`C:\dev\vcpkg\vcpkg.exe install glfw3 glm`
+6. VS Code + 三个插件:C/C++、CMake Tools、CMake
+7. clone 本仓库:`git clone git@github.com:VE5PER-17/mini-rend.git`(那台机器也要配 SSH 密钥,见 CLAUDE.md 跨设备机制)
+
+> vcpkg 路径固定用 `C:\dev\vcpkg`,这样 CMake 配置里的 toolchain 路径两台机器一致,不用改代码。
+
 ## 下一步(细化)
 
-**当前:** 等用户装完 VS Code 插件 → 做整条工具链的冒烟测试
+**当前:** 做整条工具链的冒烟测试(在开发机 A 上)
 
 **冒烟测试:** 写一个最小 CMake 工程,用 MSVC 编译,链接 GLFW + glm,跑出一个窗口。
-验证:编辑器 → CMake → MSVC → vcpkg 库 整条链路都通,地基扎实再写渲染代码。
+验证:VS Code → CMake → MSVC → vcpkg 库 整条链路都通,地基扎实再写渲染代码。
+
+**冒烟测试要点(给下一个 Claude):**
+- CMake 配置要用 vcpkg toolchain 文件:`C:\dev\vcpkg\scripts\buildsystems\vcpkg.cmake`
+- 在 CMakeLists.txt 里:`find_package(glfw3 CONFIG REQUIRED)` + `target_link_libraries(... PRIVATE glfw)`
+- glm:`find_package(glm CONFIG REQUIRED)` + `target_link_libraries(... PRIVATE glm::glm)`
+- 用 MSVC 编译器(x64),CMake Tools 插件会自动检测
+- 验收:能弹出 GLFW 窗口,关闭窗口正常退出,无编译警告/错误
 
 **通过后:** 进入里程碑 1 第二步 —— 窗口程序(练 RAII / 智能指针),再学管线概念画三角形。
 
@@ -73,4 +95,5 @@
 
 ## 会话记录
 
-- 2026-07-13:确定项目方向(C++ + Vulkan,OpenGL 过渡),确立工作流与严格验证标准,搭好项目骨架并推送到 GitHub。
+- 2026-07-13(会话 1):确定项目方向(C++ + Vulkan,OpenGL 过渡),确立工作流与严格验证标准,搭好项目骨架并推送到 GitHub。确认技术栈:VS Code + MSVC,NVIDIA GPU,双 Windows 跨设备,理论中等深度。
+- 2026-07-13(会话 1):装好开发机 A 工具链(vcpkg + GLFW 3.4 + glm 1.0.3 + VS Code 插件)。下一步冒烟测试。开发机 B 待装。
