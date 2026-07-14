@@ -1,37 +1,34 @@
-#include <GLFW/glfw3.h>
+#include "window.h"
 #include <glm/glm.hpp>
 #include <iostream>
 
 int main() {
-    // 初始化 GLFW(窗口库)
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW\n";
+    // RAII:GlfwContext 构造时 init GLFW,离开作用域时自动 terminate。
+    // 即使下面任何一步出错提前 return,GlfwContext 的析构也保证清理。
+    GlfwContext ctx;
+    if (!ctx.isValid()) {
         return 1;
     }
 
-    // 创建一个 800x600 的窗口,标题 "mini-rend"
-    GLFWwindow* window = glfwCreateWindow(800, 600, "mini-rend", nullptr, nullptr);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window\n";
-        glfwTerminate();
+    // RAII:Window 构造时创建窗口,析构时自动销毁。
+    // 不再需要手动配对 glfwCreateWindow / glfwDestroyWindow。
+    Window window(800, 600, "mini-rend");
+    if (!window.isValid()) {
         return 1;
     }
-    glfwMakeContextCurrent(window);
 
-    // 用一下 glm,验证它链接上了(算两个向量的点积)
+    // 验证 glm 链接(冒烟测试遗留,确认数学库可用)
     glm::vec3 a(1.0f, 2.0f, 3.0f);
     glm::vec3 b(4.0f, 5.0f, 6.0f);
-    float dot = glm::dot(a, b);
-    std::cout << "glm dot product: " << dot << "\n";
+    std::cout << "glm dot product: " << glm::dot(a, b) << "\n";
 
     // 主循环:窗口没关就一直转
-    while (!glfwWindowShouldClose(window)) {
-        glfwSwapBuffers(window);    //交换前后缓冲
-        glfwPollEvents();           //处理键盘鼠标事件
+    while (!window.shouldClose()) {
+        window.swapBuffers();
+        window.pollEvents();
     }
 
-    // 清理
-    glfwDestroyWindow(window); //顺序很重要
-    glfwTerminate();
+    // 不需要手动清理!Window 和 GlfwContext 离开作用域时自动析构。
+    // 对比之前的版本:这里少了两行 glfwDestroyWindow + glfwTerminate。
     return 0;
 }

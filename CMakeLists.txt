@@ -14,7 +14,10 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
 # ---- 可执行文件 ----
-add_executable(mini-rend src/main.cpp)
+add_executable(mini-rend
+    src/main.cpp
+    src/window.cpp
+)
 
 target_link_libraries(mini-rend PRIVATE glfw glm::glm)
 

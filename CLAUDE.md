@@ -40,18 +40,38 @@
 **用户开发机:** NVIDIA GeForce/RTX(Vulkan 支持最好,RenderDoc 兼容)。
 **跨设备:** 另一台也是 Windows,工具链完全一致,无平台障碍。
 
-**已装工具(本机,2026-07-13 检测):**
-- Visual Studio 2022 Professional(`C:\Program Files\Microsoft Visual Studio\18\Professional`)—— 含 MSVC
-- VS Build Tools(`C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools`)
+**已装工具(本机,2026-07-14 检测):**
+- Visual Studio 2026 v18.0 Professional(`C:\Program Files\Microsoft Visual Studio\18\Professional`)—— 含 MSVC 19.51
+- VS Build Tools(`C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools`,自带 Ninja)
 - CMake 4.3.4
 - Git 2.54.0
-- 未装:vcpkg、GLFW、glm(里程碑 1 装);Vulkan SDK(里程碑 3 装)
+- vcpkg(`C:\dev\vcpkg`,版本 2026-05-27)+ GLFW 3.4 + glm 1.0.3
+- VS Code 插件:C/C++、CMake Tools、CMake
+- 未装:Vulkan SDK、RenderDoc(里程碑 3 装)
+
+**⚠️ 本机环境关键事实(新设备 Claude 必读,详见 PROGRESS.md):**
+- 本机 VS 是 **2026 v18.0**(不是 2022)。CMake 的 "Visual Studio 17 2022" 生成器对本机失效,必须用 **Ninja 生成器**。
+- 命令行编译必须先激活 MSVC:`C:\Program Files\Microsoft Visual Studio\18\Professional\VC\Auxiliary\Build\vcvarsall.bat x64`(激活时报 `'vswhere.exe' is not recognized` 是正常的,不影响)。
+- 一键构建脚本:`scripts\smoke_build.bat`(纯英文,因中文 Windows 的 cmd 用 GBK,.bat 含中文会让脚本解析崩溃——全局 CLAUDE.md 第 7 条)。
+- 构建方式:`scripts\smoke_build.bat`(激活 MSVC + Ninja + 配置 + 编译)
 
 **理论深度:中等。** 用户会自己补充原理,Claude 在相关步骤提示"这里需要补 XX 原理"即可,不展开推导。
 
 **用户背景:** 有 Java 基础,C++ 几乎新学,图形新手。重点防 Java→C++ 的心智模型坑:指针 / 手动内存、栈 vs 堆 / RAII、未定义行为、值语义。
 
 ## 工作流约定(最重要)
+
+### 代码约定(C++ 风格,所有代码遵守)
+
+- **RAII 优先:** 所有资源(GLFW 窗口、以后 Vulkan 的 device/buffer 等)用类包装,构造获取、析构释放。不用手动配对的 init/destroy。
+- **栈对象优先,智能指针按需:** 能用栈对象就别堆。`unique_ptr` 留给"需要堆 / 共享 / 多态"的场景(Vulkan 资源里会自然出现)。这是防 Java→C++ 残留(Java 对象默认堆)。
+- **指针成员一律类内初始化为 nullptr:** 防未初始化垃圾值。
+- **析构后置 nullptr:** 防垂悬指针。
+- **管理资源的类禁用拷贝:** `= delete` 拷贝构造 + 拷贝赋值(三/五法则)。
+- **头文件 `#pragma once`**;声明放 .h,实现放 .cpp。
+- **成员变量下划线后缀**(`window_`),区分局部变量。
+- **const 成员函数:** 不改对象的成员函数加 const。
+- **MSVC 编译选项:** `/utf-8`(中文注释不警告)+ `/W4`(高警告)+ `/EHsc`(C++ 异常)。已在 CMakeLists.txt 配好。
 
 ### 协作模式:手把手辅导
 
