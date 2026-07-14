@@ -123,3 +123,4 @@
 - 2026-07-13(会话 1):确定项目方向(C++ + Vulkan,OpenGL 过渡),确立工作流与严格验证标准,搭好项目骨架并推送到 GitHub。确认技术栈:VS Code + MSVC,NVIDIA GPU,双 Windows 跨设备,理论中等深度。
 - 2026-07-13(会话 1):装好开发机 A 工具链(vcpkg + GLFW 3.4 + glm 1.0.3 + VS Code 插件)。下一步冒烟测试。开发机 B 待装。
 - 2026-07-14(会话 2):冒烟测试通过。写 CMakeLists/main.cpp/CMakePresets,踩过 VS 2026 生成器坑、.bat 中文编码坑,用 Ninja+vcvars 解决。compile_commands.json 解决 VS Code 红线。关键事实已记入上方"开发机 A 环境关键事实"。下一步:RAII 包装窗口。
+- 2026-07-14(会话 2 续):RAII 包装窗口完成(Window + GlfwContext 类,禁拷贝,nullptr 防垃圾值+垂悬指针,栈对象优先)。学到栈展开/析构必调/析构逆序/三五法则。CLAUDE.md 加代码约定。用户纠正"每步都要更新 NOTES+PROGRESS+README",已补 NOTES.md(沉淀工具链/C++/RAII/管线笔记)并写进 CLAUDE.md 工作流。下一步:里程碑 1 第三步,画三角形(渲染管线)。
