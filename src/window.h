@@ -1,5 +1,8 @@
 #pragma once
 
+// 告诉 GLFW 不要自动包含 OpenGL 头,改由 glad 提供
+// 必须在包含 GLFW 之前定义
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 // Window —— 用 RAII 包装 GLFW 窗口

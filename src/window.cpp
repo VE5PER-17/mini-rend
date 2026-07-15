@@ -20,6 +20,12 @@ GlfwContext::~GlfwContext() {
 // ============ Window ============
 
 Window::Window(int width, int height, const char* title) {
+    // 要求 OpenGL 3.3 核心模式上下文(对应着色器里的 #version 330 core)
+    // 必须在创建窗口之前设置这些 hint
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     window_ = glfwCreateWindow(width, height, title, nullptr, nullptr);
     if (!window_) {
         std::cerr << "Failed to create GLFW window\n";

@@ -79,4 +79,35 @@
 
 ---
 
-(里程碑 1 第三步"画三角形"的笔记,待写)
+## 里程碑 1 第三步:画三角形
+
+### VBO / VAO / 状态机(OpenGL 核心)
+- **VBO(Vertex Buffer Object):** GPU 显存里存顶点数据的"仓库"。只管存,不管格式。创建:gen→bind→bufferData。
+- **VAO(Vertex Array Object):** 记录"怎么读 VBO"的规则说明书。记:0号位置、每几个float一组、来自哪个VBO。画图时绑定 VAO 即可。
+- **关系:** VBO 存数据,VAO 存读法+指向VBO。画图:`glBindVertexArray(vao); glDrawArrays(...)`
+- **OpenGL 是状态机:** 靠"当前绑定(bind)"决定操作对象。`glVertexAttribPointer` 隐式用当前 VBO——忘了先 bind VBO 会指向错误对象,这是常见 bug 源。类比 Photoshop 图层:选中哪个图层画笔就画哪。
+- **待补:** Vulkan 改成显式传参(啰嗦但不易错)。
+
+### glad(OpenGL 函数加载器)
+- **是什么:** OpenGL 函数地址运行时从驱动查询,glad 生成加载代码,启动时把所有函数地址查出来。
+- **关键:** `gladLoadGLLoader` 必须在**创建 OpenGL 上下文之后**调。
+- **坑:** glad 自己包含 OpenGL 头,所以包含 GLFW 前要 `#define GLFW_INCLUDE_NONE`,否则冲突报 `OpenGL header already included`。
+
+### 着色器(Shader)
+- **GLSL:** GPU 专用语言,语法像 C,有 vec3/vec4(和 glm 一致)。
+- **顶点着色器:** 逐顶点,输入 `in vec3 aPos`(location=0 从 VAO 读),输出 `gl_Position`(vec4 齐次坐标)。
+- **片段着色器:** 逐片段,输出 `out vec4 FragColor`(RGBA,0~1)。
+- **程序(Program):** 顶点+片段着色器链接成一个 program,draw 时 `use()` 激活。
+- **坑:** 着色器编译失败不会自动报错,必须主动 `glGetShaderiv(GL_COMPILE_STATUS)` 查 + 打印 info log,否则黑屏无从排查。
+- **RAII:** Shader 类构造编译+链接,析构 `glDeleteProgram`。
+
+### NDC(归一化设备坐标)
+- 屏幕中心(0,0),左下(-1,-1),右上(1,1),z 范围 -1~1。不管窗口多大坐标都在 -1~1。
+- **待补:** NDC→屏幕像素转换(viewport)、齐次坐标(vec4 的 w 分量)。
+
+### 片段 vs 像素
+- **片段(fragment):** 光栅化产生的"候选像素",可能多个对应一个像素(抗锯齿),可能被深度测试丢弃。
+- **像素(pixel):** 片段着色器输出后的最终结果。里程碑 2 深度测试会体会区别。
+
+### OpenGL 3.3 核心模式
+- 创建窗口前设 hint:`CONTEXT_VERSION_MAJOR/MINOR = 3.3`,`PROFILE = CORE`。对应 GLSL `#version 330 core`。
