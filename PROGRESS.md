@@ -2,6 +2,60 @@
 
 > **跨设备接力文件。** 每次会话结束更新本文件,记录当前进度和下一步。
 > 新设备上 Claude 读这个文件就知道接着干什么。
+>
+> **给接手 Claude 的快速启动:**
+> 1. 读 [CLAUDE.md](CLAUDE.md) 了解项目目标、技术栈、代码约定和工作流
+> 2. 读完本文件(特别是"GitHub 工作流"和"当前状态")就知道到哪了
+> 3. 问用户"开始之前要不要先跑一遍 build 验证能编译?"
+> 4. 接着 **下一步** 继续推进
+
+## GitHub 工作流(Claude 接手必读)
+
+### 仓库信息
+- **远程:** `git@github.com:VE5PER-17/mini-rend.git`(SSH)
+- **分支:** 只有 `main`(单人项目,未使用 feature branch)
+- **认证:** SSH 密钥(已配置在开发机 A;开发机 B 需重新生成或复制密钥)
+
+### 提交约定
+- **每个子步骤一次提交**,小步提交,便于二分定位
+- 提交信息格式:一句话总结改了什么,空行后 bullet points 列出关键改动
+- 提交信息尾部加: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`
+- 示例:
+  ```
+  Milestone 1 step 2: RAII wrapper for GLFW window
+  
+  - src/window.h + window.cpp: Window class (RAII)
+  - src/main.cpp: rewritten to use RAII
+  - CLAUDE.md: add C++ coding conventions
+  ```
+
+### 推送前检查清单
+- [ ] 编译零警告零错误
+- [ ] 程序能运行(不崩溃)
+- [ ] 用户肉眼确认画面正确(图形改动时)
+- [ ] CLAUDE.md 已更新(技术栈/已装工具/代码约定)
+- [ ] PROGRESS.md 已更新(进度/下一步/会话记录)
+- [ ] NOTES.md 已更新(新学概念已沉淀)
+- [ ] README.md 已更新(进度简要概览)
+- [ ] 用户说"OK"或"可以提交"
+
+### 开发机 A 构建方式(给后台/CI 用)
+- 一键构建:`scripts\smoke_build.bat`(激活 MSVC → 配 Ninja → cmake configure → cmake build)
+- 运行:`build\mini-rend.exe`
+- 清缓存:删 `build/` 目录(只删内容,不删 build 本身)
+- VS Code 和命令行构建结果一致
+
+### 跨设备接手流程
+1. 新 Windows 机器上装工具链(见下方"开发机 B 工具链安装")
+2. `git clone git@github.com:VE5PER-17/mini-rend.git`(需要 SSH 密钥)
+3. 启动 Claude(它会自动读 CLAUDE.md)
+4. 让用户告诉 Claude"读一下 PROGRESS.md,我们接着干"
+5. 先跑 `scripts\smoke_build.bat` 验证能编译
+6. 根据当前进度继续推进
+
+### 什么不进 Git
+- `.gitignore` 已排除:build、.vscode、vcpkg_installed、*.rdc(RenderDoc 抓帧)
+- CLAUDE.md 和 PROGRESS.md 里的本机环境信息(如 VS 安装路径)跨设备时会不一致,Claude 接手后要重新确认
 
 ## 里程碑清单
 

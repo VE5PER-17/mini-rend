@@ -37,5 +37,5 @@
 ## 给协作者的说明
 
 - 读 [CLAUDE.md](CLAUDE.md) 了解项目目标、工作流和约定
-- 读 [PROGRESS.md](PROGRESS.md) 了解当前进度和下一步
+- 读 [PROGRESS.md](PROGRESS.md) 了解当前进度和下一步(含 GitHub 工作流)
 - 学习笔记在 [NOTES.md](NOTES.md)
